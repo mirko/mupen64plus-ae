@@ -244,6 +244,12 @@ public class AppData
         }
     }
 
+    /** True if device is running marshmallow or later (24 - Android 7.0.x) */
+    public static final boolean IS_NOUGAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+
+    /** True if device is running marshmallow or later (26 - Android 8.0.x) */
+    public static final boolean IS_OREO = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+
     public static final String CORE_WORKING_DIR_NAME = "WorkingPath";
     
     /** The hardware info, refreshed at the beginning of every session. */
@@ -407,7 +413,7 @@ public class AppData
         isAndroidTv = uiModeManager != null && uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
 
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        useLegacyFileBrowser = ((isAndroidTv && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) ||
+        useLegacyFileBrowser = ((isAndroidTv && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) || Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1 ||
                 intent.resolveActivity(context.getPackageManager()) == null);
 
         manufacturer = android.os.Build.MANUFACTURER;
@@ -730,8 +736,13 @@ public class AppData
         return isAngleRenderer;
     }
 
+    @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String source)
     {
-        return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        if (IS_NOUGAT) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(source);
+        }
     }
 }

@@ -204,9 +204,7 @@ public class TextureInfo
         Map<String, Integer> romHeaderCount = new HashMap<>();
         try
         {
-            zipfile = SevenZFile.builder()
-                    .setFile(new File(filename))
-                    .get();
+            zipfile = new SevenZFile(new File(filename));
             return getTexturePackNameFromSevenZ(zipfile);
         }
         catch( Exception ze )
@@ -241,6 +239,10 @@ public class TextureInfo
      */
     public static String getTexturePackNameFromSevenZ(Context context, Uri fileUri)
     {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return null;
+        }
+
         SevenZFile zipfile = null;
         ParcelFileDescriptor parcelFileDescriptor;
         try
@@ -249,10 +251,10 @@ public class TextureInfo
 
             if (parcelFileDescriptor != null)
             {
-                FileInputStream fileInputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
-                zipfile = SevenZFile.builder()
-                        .setSeekableByteChannel(fileInputStream.getChannel())
-                        .get();
+                FileInputStream fis = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
+                FileChannel fileChannel = fis.getChannel();
+
+                zipfile = new SevenZFile(fileChannel);
                 return getTexturePackNameFromSevenZ(zipfile);
             }
         }

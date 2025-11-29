@@ -543,7 +543,9 @@ public class GalleryActivity extends AppCompatActivity implements GameSidebarAct
         });
 
         mDrawerLayout.setOnHoverListener((v, event) -> {
-            mHandler.postDelayed(() -> v.setPointerIcon(PointerIcon.getSystemIcon(GalleryActivity.this, PointerIcon.TYPE_ARROW)), 100);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mHandler.postDelayed(() -> v.setPointerIcon(PointerIcon.getSystemIcon(GalleryActivity.this, PointerIcon.TYPE_ARROW)), 100);
+            }
             return false;
         });
 
@@ -1031,7 +1033,7 @@ public class GalleryActivity extends AppCompatActivity implements GameSidebarAct
         // Restore the menu
         mGameSidebar.setActionHandler(GalleryActivity.this, R.menu.gallery_game_drawer);
 
-        if (mAppData.isAndroidTv)
+        if (!AppData.IS_OREO || mAppData.isAndroidTv)
         {
             mGameSidebar.getMenu().removeItem(R.id.menuItem_createShortcut);
             mGameSidebar.reload();

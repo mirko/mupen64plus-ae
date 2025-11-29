@@ -1,12 +1,13 @@
 
 android {
-    compileSdkVersion 36
-    ndkVersion="26.1.10909125"
+    compileSdkVersion 34
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
-        minSdkVersion 28
-        targetSdkVersion 36
+        minSdkVersion 23
+        targetSdkVersion 35
         versionCode = 249
         versionName = "3.0.249 (beta)"
+
     }
 }

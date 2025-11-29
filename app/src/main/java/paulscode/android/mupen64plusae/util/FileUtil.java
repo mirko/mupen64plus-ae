@@ -794,14 +794,15 @@ public final class FileUtil
      */
     public static void unSevenZAll(@NonNull Context context, @NonNull Uri fileUri, String outputDir )
     {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return;
+        }
+
         try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(fileUri, "r");
              FileInputStream fis = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
-             FileChannel fileChannel = fis.getChannel())
-        {
+             FileChannel fileChannel = fis.getChannel();
+             SevenZFile zipfile = new SevenZFile(fileChannel)){
 
-            SevenZFile zipfile = SevenZFile.builder()
-                    .setSeekableByteChannel(fileChannel)
-                    .get();
             SevenZArchiveEntry zipEntry;
 
             while( (zipEntry = zipfile.getNextEntry()) != null)
@@ -833,9 +834,7 @@ public final class FileUtil
         SevenZFile zipfile = null;
         try
         {
-            zipfile = SevenZFile.builder()
-                    .setFile(archive)
-                    .get();
+            zipfile = new SevenZFile(archive);
             SevenZArchiveEntry zipEntry;
 
             while( (zipEntry = zipfile.getNextEntry()) != null)
@@ -981,14 +980,15 @@ public final class FileUtil
 
     public static String ExtractFirstROMFromSevenZ(Context context, Uri zipPath, String unzippedRomDir)
     {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return null;
+        }
 
         try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(zipPath, "r");
              FileInputStream fis = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
              FileChannel fileChannel = fis.getChannel();
-             ){
-            SevenZFile zipfile = SevenZFile.builder()
-                    .setSeekableByteChannel(fileChannel)
-                    .get();
+             SevenZFile zipfile = new SevenZFile(fileChannel)){
+
             SevenZArchiveEntry zipEntry;
 
             while( (zipEntry = zipfile.getNextEntry()) != null)
@@ -1081,7 +1081,7 @@ public final class FileUtil
 
     public static RomHeader getHeaderFromSevenZip(Context context, String romFileName, String zipPath)
     {
-        if (zipPath == null) {
+        if (!AppData.IS_NOUGAT || zipPath == null) {
             return null;
         }
 
@@ -1093,9 +1093,7 @@ public final class FileUtil
             if (parcelFileDescriptor != null) {
                 FileInputStream fileInputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
 
-                SevenZFile zipFile = SevenZFile.builder()
-                        .setSeekableByteChannel(fileInputStream.getChannel())
-                        .get();
+                SevenZFile zipFile = new SevenZFile(fileInputStream.getChannel());
                 SevenZArchiveEntry zipEntry;
 
                 while( (zipEntry = zipFile.getNextEntry()) != null && !lbFound)
@@ -1125,7 +1123,7 @@ public final class FileUtil
         return returnData;
     }
 
-    /**
+    /*
      * Makes directory structure if it doesn't already exist
      * @param destDir Destination directory to create
      */

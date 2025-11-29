@@ -81,7 +81,12 @@ public class NativeInput
         
         if( active ) {
             sVibrators[controllerNum].vibrate(VIBRATE_TIMEOUT);
-            sVibrators[controllerNum].vibrate(VibrationEffect.createOneShot(VIBRATE_TIMEOUT, 100));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                sVibrators[controllerNum].vibrate(VibrationEffect.createOneShot(VIBRATE_TIMEOUT, 100));
+            } else {
+                sVibrators[controllerNum].vibrate(VIBRATE_TIMEOUT);
+            }
         }else
             sVibrators[controllerNum].cancel();
     }

@@ -91,7 +91,7 @@ public class SyncProgramsJobService extends JobService implements GalleryRefresh
     {
         AppData appData = new AppData(context);
 
-        if (appData.isAndroidTv) {
+        if (AppData.IS_OREO && appData.isAndroidTv) {
             ComponentName componentName = new ComponentName(context, SyncProgramsJobService.class);
 
             JobInfo.Builder builder = new JobInfo.Builder(getJobIdForChannelId(channelId), componentName);
@@ -129,7 +129,7 @@ public class SyncProgramsJobService extends JobService implements GalleryRefresh
     public static void syncProgramsForChannel(Context context, long channelId)
     {
         AppData appData = new AppData(context);
-        if (appData.isAndroidTv) {
+        if (AppData.IS_OREO && appData.isAndroidTv) {
             ComponentName componentName = new ComponentName(context, SyncProgramsJobService.class);
 
             JobInfo.Builder builder = new JobInfo.Builder(getJobIdForChannelId(channelId), componentName);

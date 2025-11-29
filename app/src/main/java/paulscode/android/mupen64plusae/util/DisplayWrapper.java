@@ -189,11 +189,13 @@ public class DisplayWrapper {
             }
         }
 
-        Window window = activity.getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams param = window.getAttributes();
-            if (param != null) {
-                param.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Window window = activity.getWindow();
+            if (window != null) {
+                WindowManager.LayoutParams param = window.getAttributes();
+                if (param != null) {
+                    param.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                }
             }
         }
     }

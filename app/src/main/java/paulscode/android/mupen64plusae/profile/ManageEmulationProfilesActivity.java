@@ -111,9 +111,11 @@ public class ManageEmulationProfilesActivity extends ManageProfilesActivity
         }
 
         boolean supportsParallelRdp = false;
-        PackageManager pm = getPackageManager();
-        if (pm != null && pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x401000)){
-            supportsParallelRdp = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PackageManager pm = getPackageManager();
+            if (pm != null && pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x401000)){
+                supportsParallelRdp = true;
+            }
         }
 
         if (!supportsParallelRdp) {

@@ -42,8 +42,8 @@ import java.io.File;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.FileInputStream;
@@ -347,18 +347,19 @@ class CoreInterface
 
     private byte[] extractSevenZ(Context context, String romFileName, String zipPath)
     {
+        if (!AppData.IS_NOUGAT) {
+            return null;
+        }
+
         byte[] returnData = null;
 
         boolean lbFound = false;
 
         try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(Uri.parse(zipPath), "r")) {
             if (parcelFileDescriptor != null) {
-
                 FileInputStream fileInputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
-                SevenZFile zipFile = SevenZFile.builder()
-                        .setSeekableByteChannel(fileInputStream.getChannel())
-                        .get();
 
+                SevenZFile zipFile = new SevenZFile(fileInputStream.getChannel());
                 SevenZArchiveEntry zipEntry;
 
                 while( (zipEntry = zipFile.getNextEntry()) != null && !lbFound)

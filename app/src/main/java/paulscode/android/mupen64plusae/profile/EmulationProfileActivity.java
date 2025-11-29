@@ -161,9 +161,11 @@ public class EmulationProfileActivity extends ProfileActivity
 
         //Remove or add options depending on whether vulkan is supported
         boolean supportsParallel = false;
-        PackageManager pm = getPackageManager();
-        if (pm != null && pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x401000)) {
-            supportsParallel = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PackageManager pm = getPackageManager();
+            if (pm != null && pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x401000)) {
+                supportsParallel = true;
+            }
         }
 
         if (!supportsParallel && preferenceVideoPlugin != null) {

@@ -9,15 +9,15 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ndk {
-                debugSymbolLevel = 'FULL'
+                debugSymbolLevel 'FULL'
             }
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             jniDebuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ndk {
-                debugSymbolLevel = 'FULL'
+                debugSymbolLevel 'FULL'
             }
         }
         android {
@@ -26,7 +26,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            version = "3.22.1"
+            version "3.22.1"
             path "CMakeLists.txt"
         }
     }
